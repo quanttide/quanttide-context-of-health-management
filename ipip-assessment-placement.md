@@ -50,3 +50,19 @@ HR 云里的人格测评，客户买单的核心诉求是**"预测绩效"**和**
 
 - `qtcloud-health/docs/dev-guide/add/data-ownership.md` — 个人-企业数据共同拥有设计
 - `qtcloud-health/docs/dev-guide/adr/0002-personal-enterprise-data-ownership.md` — ADR-0002 决策记录
+
+## 补充（2026-08-16）：家庭场景的"共同拥有"讨论
+
+追问"那家庭呢？"后的分析结论：
+
+- **家庭与企业的共享形态相反**：企业只拿聚合（法律底线：雇主接触个体心理明细 = 就业歧视风险），家庭必须看明细（照护刚需）。共享级别谱系：`itemized`（家庭，记录粒度）↔ `aggregate_only`（企业，锁定）
+- **家庭语义**：患者是唯一数据主体；家庭租户是"关系 + 授权容器"而非数据所有者；family owner 管理家庭结构但**不默认拥有成员明细**
+- **语义裂缝**：现状明细存家庭租户（tenant_id），一个人同时有个人租户与家庭租户时，健康数据散落多处，与"个人租户是明细单一事实源"不一致
+- **决策（ADR-0003）**：V1 承认现状 + 补语义（患者=数据主体、owner 无默认明细权、成员退出/家庭解散时明细迁回个人租户、care_grants 联动撤销）；V2 统一模型（明细一律归个人租户，家庭/企业同为关系层，care_grants 跨租户化），触发条件是个人跨家庭/企业数据视图需求出现
+- **三类主体统一所有权语义**：个人 = 明细源，家庭 = 关系 + 授权，企业 = 聚合
+
+已据此产出：
+
+- `qtcloud-health/docs/dev-guide/add/data-ownership.md` — 升级为三类主体数据所有权设计
+- `qtcloud-health/docs/dev-guide/adr/0003-family-data-ownership.md` — ADR-0003 决策记录
+- `qtcloud-health/docs/dev-guide/add/care-grants.md`、`multi-tenant.md` — 家庭语义修订
